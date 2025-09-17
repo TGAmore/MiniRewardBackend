@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniReward</title>
+<style>
+body { font-family: Arial; background:#f4f4f9; text-align:center; padding:50px; }
+.container { background:white; padding:20px; border-radius:15px; max-width:400px; margin:auto; box-shadow:0 4px 15px rgba(0,0,0,0.1);}
+h1 { color:#333; }
+button { background:#4CAF50; color:white; padding:12px 20px; margin:10px 0; border:none; border-radius:10px; cursor:pointer; font-size:16px; }
+button:hover { background:#45a049; }
+input { padding:10px; width:80%; border-radius:8px; border:1px solid #ccc; margin:10px 0; }
+.info { margin:10px 0; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>MiniReward</h1>
+<div class="info">رصيدك الحالي: <span id="balance">0</span> نقطة</div>
+<button onclick="watchAd()">💰 مشاهدة إعلان</button>
+<button onclick="showRefLink()">👥 رابط الدعوة</button>
+<button onclick="withdraw()">💳 طلب سحب</button>
+<div id="referral" style="margin-top:15px; display:none;">
+<input type="text" id="refLink" readonly>
+</div>
+<script>
+const API_URL = "https://YOUR_VERCEL_PROJECT.vercel.app/api"; // ضع رابط مشروعك على Vercel
+const userId = prompt("أدخل معرف المستخدم أو رقم التعريف");
+const referrerId = prompt("أدخل معرف المحيل إذا وجدت") || null;
+
+// تسجيل المستخدم
+fetch(`${API_URL}/register`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({user_id:userId, referrer_id:referrerId})
+}).then(()=>updateBalance());
+
+function updateBalance(){
+    fetch(`${API_URL}/balance/${userId}`)
+    .then(res=>res.json())
+    .then(data=>document.getElementById('balance').innerText=data.balance);
+}
+
+function watchAd(){
+    window.open("https://adsgram.net/int-14994","_blank");
+    fetch(`${API_URL}/watch_ad`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({user_id:userId})
+    }).then(()=>updateBalance());
+}
+
+function withdraw(){
+    fetch(`${API_URL}/withdraw`,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({user_id:userId})
+    }).then(res=>{
+        if(res.ok){ alert("تم إرسال طلب السحب للادمن"); updateBalance(); }
+        else{ alert("رصيدك غير كافي"); }
+    });
+}
+
+function showRefLink(){
+    fetch(`${API_URL}/referral/${userId}`)
+    .then(res=>res.json())
+    .then(data=>{
+        document.getElementById('refLink').value=data.ref_link;
+        document.getElementById('referral').style.display="block";
+    });
+}
+</script>
+</div>
+</body>
+</html>
