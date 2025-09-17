@@ -1,9 +1,0 @@
-{
-  "name": "mini-reward-backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "vercel dev"
-  },
-  "dependencies": {}
-}
