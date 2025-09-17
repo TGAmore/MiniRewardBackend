@@ -1,0 +1,10 @@
+{
+  "name": "MiniReward",
+  "version": "1.0.0",
+  "main": "api/bot.py",
+  "dependencies": {
+    "flask": "^2.3.3",
+    "pytelegrambotapi": "^4.12.0",
+    "requests": "^2.31.0"
+  }
+}
